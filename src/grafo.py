@@ -62,6 +62,28 @@ def heuristica(bairro_a, bairro_b):
     return math.hypot(x2 - x1, y2 - y1)
 
 
+def a_estrela(grafo, inicio, fim):
+    contador = 0
+    fila = [(heuristica(inicio, fim), contador, inicio, [inicio], 0)]
+    custos = {inicio: 0}
+
+    while fila:
+        prioridade, _, atual, caminho, custo_g = heapq.heappop(fila)
+
+        if atual == fim:
+            return caminho, custo_g
+
+        for vizinho, peso in grafo[atual]:
+            novo_custo = custo_g + peso
+            if novo_custo < custos.get(vizinho, float("inf")):
+                custos[vizinho] = novo_custo
+                prioridade = novo_custo + heuristica(vizinho, fim)
+                contador += 1
+                heapq.heappush(fila, (prioridade, contador, vizinho, caminho + [vizinho], novo_custo))
+
+    return None, float("inf")
+
+
 if __name__ == "__main__":
     caminho = bfs(ruas, "Loja", "Bela_Vista")
     print("Caminho encontrado pelo BFS:", caminho)
@@ -71,3 +93,7 @@ if __name__ == "__main__":
 
     dist = heuristica("Loja", "Centro")
     print("Distância em linha reta Loja -> Centro:", dist)
+
+    caminho_astar, custo_astar = a_estrela(ruas, "Loja", "Bela_Vista")
+    print("Caminho encontrado pelo A*:", caminho_astar)
+    print("Distância total do A*:", custo_astar)
