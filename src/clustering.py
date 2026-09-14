@@ -1,6 +1,6 @@
 from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
 
-# Coordenadas dos pedidos simulados (poderiam vir de um CSV, mas aqui é fixo pra simplificar)
 pedidos = {
     1: (0.5, 4.8),
     2: (2.2, 4.5),
@@ -21,3 +21,13 @@ zonas = kmeans.fit_predict(coordenadas)
 if __name__ == "__main__":
     for pedido_id, zona in zip(pedidos.keys(), zonas):
         print(f"Pedido {pedido_id} -> Zona {zona}")
+
+    cores = ["red", "blue", "green", "orange", "purple"]
+    for (x, y), zona in zip(coordenadas, zonas):
+        plt.scatter(x, y, color=cores[zona], s=100)
+
+    plt.title("Pedidos agrupados por zona (K-Means)")
+    plt.xlabel("Coordenada X")
+    plt.ylabel("Coordenada Y")
+    plt.savefig("outputs_zonas.png")
+    print("Gráfico salvo como outputs_zonas.png")
