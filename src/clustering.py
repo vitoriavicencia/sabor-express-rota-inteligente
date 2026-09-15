@@ -22,12 +22,20 @@ if __name__ == "__main__":
     for pedido_id, zona in zip(pedidos.keys(), zonas):
         print(f"Pedido {pedido_id} -> Zona {zona}")
 
+    plt.figure(figsize=(10, 8))
     cores = ["red", "blue", "green", "orange", "purple"]
-    for (x, y), zona in zip(coordenadas, zonas):
-        plt.scatter(x, y, color=cores[zona], s=100)
+    zonas_ja_legendadas = set()
+    for (x, y), zona, pedido_id in zip(coordenadas, zonas, pedidos.keys()):
+        rotulo = f"Zona {zona}" if zona not in zonas_ja_legendadas else None
+        plt.scatter(x, y, color=cores[zona], s=100, label=rotulo)
+        plt.annotate(f"Pedido {pedido_id}", (x, y), fontsize=8, xytext=(5, 5), textcoords="offset points")
+        zonas_ja_legendadas.add(zona)
+
+    plt.legend()
 
     plt.title("Pedidos agrupados por zona (K-Means)")
     plt.xlabel("Coordenada X")
     plt.ylabel("Coordenada Y")
+    plt.margins(0.15)
     plt.savefig("outputs_zonas.png")
     print("Gráfico salvo como outputs_zonas.png")
